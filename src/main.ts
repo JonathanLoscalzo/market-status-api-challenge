@@ -4,7 +4,13 @@ import * as df from 'dotenv-flow';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter } from './core/exception-filters/http/http.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { INestApplication } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationError,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ValidationException } from './core/exceptions/validation.exception';
+import { ValidationExceptionFilter } from './core/exception-filters/validation/validation.filter';
 
 async function bootstrap() {
   df.config({
@@ -23,7 +29,13 @@ async function bootstrap() {
 }
 
 function addFilters(app) {
+  // https://docs.nestjs.com/pipes
+  // Pipes run inside the exceptions zone. This means that when a Pipe
+  // throws an exception it is handled by the exceptions layer (global exceptions filter and any exceptions
+  // filters that are applied to the current context)
+
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new ValidationExceptionFilter());
 }
 
 function addSwagger(app) {
@@ -38,8 +50,14 @@ function addSwagger(app) {
   SwaggerModule.setup('docs', app, document);
 }
 
-function addPipes(_app: INestApplication<any>) {
-  _app;
+function addPipes(app: INestApplication<any>) {
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      exceptionFactory: (errors: ValidationError[]) =>
+        new ValidationException(errors),
+    }),
+  );
 }
 
 bootstrap();
