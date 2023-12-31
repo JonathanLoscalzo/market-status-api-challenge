@@ -15,7 +15,7 @@ export class UseCasesService {
   async getOrderbookTipsAndMarketPrice(data: {
     buyer: string;
     seller: string;
-  }): Promise<any> {
+  }) {
     return this.getOrderbookTipsAndMarketPriceUseCase.execute(data);
   }
 }
