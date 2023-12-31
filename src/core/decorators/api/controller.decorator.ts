@@ -1,9 +1,10 @@
-import { applyDecorators, Controller } from '@nestjs/common';
+import { applyDecorators, Controller, UseInterceptors } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { LoggerInterceptor } from 'src/core/interceptors/logger/logger.interceptor';
 
 export function ApiController(
   prefix: string,
@@ -14,5 +15,6 @@ export function ApiController(
     ApiTags(prefix),
     ApiBearerAuth(),
     ApiUnauthorizedResponse({ description: 'Unauthorized"' }),
+    UseInterceptors(LoggerInterceptor),
   );
 }
