@@ -13,7 +13,6 @@ export abstract class WebclientService {
     private errorCallback, // TODO: add typing
     private httpService: HttpService,
   ) {
-    // TODO: change with factory at https://docs.nestjs.com/techniques/http-module#async-configuration
     this.httpService.axiosRef.defaults.baseURL = baseUrl;
 
     this.httpService.axiosRef.interceptors.request.use((request) => {
@@ -27,9 +26,22 @@ export abstract class WebclientService {
     });
   }
 
-  get(url: string, config?: AxiosRequestConfig): Observable<AxiosResponse> {
+  get<T = any>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Observable<AxiosResponse<T>> {
     return this.httpService
       .get(url, config)
+      .pipe(catchError(this.errorCallback));
+  }
+
+  post<T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig,
+  ): Observable<AxiosResponse<T>> {
+    return this.httpService
+      .post(url, data, config)
       .pipe(catchError(this.errorCallback));
   }
 }
