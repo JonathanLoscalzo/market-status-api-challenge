@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { TickersModule } from './tickers/tickers.module';
 
-@Module({})
+@Module({
+  imports: [TickersModule],
+})
 export class ResourcesModule {}
