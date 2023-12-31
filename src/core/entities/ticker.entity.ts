@@ -1,4 +1,4 @@
-export class Ticker {
+export interface Ticker {
   // BID	float	Price of last highest bid
   bid: any;
 
@@ -27,28 +27,4 @@ export class Ticker {
 
   // LOW	float	Daily low
   low: any;
-
-  constructor({
-    bid,
-    bidSize,
-    ask,
-    askSize,
-    dailyChange,
-    dailyChangeRelative,
-    lastPrice,
-    volume,
-    high,
-    low,
-  }) {
-    this.bid = bid;
-    this.bidSize = bidSize;
-    this.ask = ask;
-    this.askSize = askSize;
-    this.dailyChange = dailyChange;
-    this.dailyChangeRelative = dailyChangeRelative;
-    this.lastPrice = lastPrice;
-    this.volume = volume;
-    this.high = high;
-    this.low = low;
-  }
 }
