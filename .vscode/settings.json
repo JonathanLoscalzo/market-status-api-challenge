@@ -1,0 +1,6 @@
+{
+  "jest.runMode": "on-demand",
+  "sqltools.connections": [],
+  "sqltools.useNodeRuntime": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
