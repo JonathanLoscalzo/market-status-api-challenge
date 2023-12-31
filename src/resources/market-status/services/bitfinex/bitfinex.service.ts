@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { OrderBookItem } from 'src/core/entities/order.entity';
 import { Ticker } from 'src/core/entities/ticker.entity';
@@ -8,7 +8,20 @@ import { WebclientService } from 'src/core/services/webclient/webclient.service'
 @Injectable()
 export class BitfinexPublicApi extends WebclientService {
   constructor(private readonly service: HttpService) {
-    super('https://api-pub.bitfinex.com/', service);
+    super(
+      'https://api-pub.bitfinex.com/',
+      (error) => {
+        throw new HttpException(
+          error.response.data.join(' - '),
+          error.response.status,
+          {
+            cause: error.response.data.join(' - '),
+            description: error.message,
+          },
+        );
+      },
+      service,
+    );
   }
 
   async ticker(buyer: string, seller: string): Promise<Ticker> {

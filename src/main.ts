@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import * as df from 'dotenv-flow';
 import { ConfigService } from '@nestjs/config';
@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ValidationException } from './core/exceptions/validation.exception';
 import { ValidationExceptionFilter } from './core/exception-filters/validation/validation.filter';
+import { ErrorFilter } from './core/exception-filters/error/error.filter';
 
 async function bootstrap() {
   df.config({
@@ -18,7 +19,9 @@ async function bootstrap() {
     node_env: process.env.NODE_ENV,
   });
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'debug', 'log', 'verbose'],
+  });
 
   addFilters(app);
   addPipes(app);
@@ -34,7 +37,8 @@ function addFilters(app) {
   // throws an exception it is handled by the exceptions layer (global exceptions filter and any exceptions
   // filters that are applied to the current context)
 
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new ErrorFilter(app.get(HttpAdapterHost)));
+  app.useGlobalFilters(new HttpExceptionFilter(app.get(HttpAdapterHost)));
   app.useGlobalFilters(new ValidationExceptionFilter());
 }
 

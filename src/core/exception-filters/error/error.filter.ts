@@ -1,25 +1,17 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { inspect } from 'util';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger('HttpExceptionFilter');
-
+@Catch(Error)
+export class ErrorFilter implements ExceptionFilter {
+  private readonly logger = new Logger('ErrorFilter');
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: HttpException, host: ArgumentsHost) {
+  public catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
-    const status = exception.getStatus();
     const { httpAdapter } = this.httpAdapterHost;
 
     this.logger.error(exception);
@@ -29,13 +21,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       )} - ${inspect(req.body)}`,
     );
 
-    response.status(status).json({
+    return response.status(400).json({
       message: {
-        statusCode: status,
+        statusCode: 400,
         error: 'Bad Request',
-        timestamp: new Date().toISOString(),
         description: exception.message,
-        path: req.url,
       },
     });
   }

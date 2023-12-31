@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Injectable, Logger } from '@nestjs/common';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Observable, catchError } from 'rxjs';
 // import { inspect } from 'util';
 
@@ -10,6 +10,7 @@ export abstract class WebclientService {
 
   constructor(
     baseUrl: string,
+    private errorCallback, // TODO: add typing
     private httpService: HttpService,
   ) {
     // TODO: change with factory at https://docs.nestjs.com/techniques/http-module#async-configuration
@@ -27,11 +28,8 @@ export abstract class WebclientService {
   }
 
   get(url: string, config?: AxiosRequestConfig): Observable<AxiosResponse> {
-    return this.httpService.get(url, config).pipe(
-      catchError((error: AxiosError) => {
-        this.logger.error(error);
-        throw new HttpException(error.response, error.response.status);
-      }),
-    );
+    return this.httpService
+      .get(url, config)
+      .pipe(catchError(this.errorCallback));
   }
 }
