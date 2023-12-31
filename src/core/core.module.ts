@@ -10,9 +10,8 @@ import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    // DatabaseModule.forRoot(),
   ],
   providers: [LoggerMiddleware],
-  exports: [HttpModule, LoggerMiddleware],
+  exports: [HttpModule, LoggerMiddleware, ConfigModule],
 })
 export class CoreModule {}

@@ -21,6 +21,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
     const status = exception.getStatus();
     const { httpAdapter } = this.httpAdapterHost;
+    if (req.url == '/health') {
+      return response.status(status).json((exception as any).response?.details);
+    }
 
     this.logger.error(exception);
     this.logger.error(
