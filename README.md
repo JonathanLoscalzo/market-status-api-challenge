@@ -18,3 +18,6 @@ Commits:
 - Ticker
   - https://api.bitfinex.com/v1/pubticker/ethusd
   - https://api-pub.bitfinex.com/v2/ticker/tETHUSD
+
+- Config:
+  - https://api-pub.bitfinex.com/v2/conf/pub:list:pair:exchange
