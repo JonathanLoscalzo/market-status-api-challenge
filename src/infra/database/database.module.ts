@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreModule } from 'src/core/core.module';
 import entities from './database.entities';
+import { GlobalSubscriber, SoftRemoveSubscriber } from './database.subscriber';
 
 @Module({
   imports: [
@@ -17,5 +18,6 @@ import entities from './database.entities';
       inject: [ConfigService],
     }),
   ],
+  providers: [GlobalSubscriber, SoftRemoveSubscriber],
 })
 export class DatabaseModule {}

@@ -31,4 +31,20 @@ export default class MarketStatusService extends BaseService<
       },
     });
   }
+
+  async createMarketStatus(
+    buyer: CRYPTO_CURRENCY,
+    seller: CRYPTO_CURRENCY,
+    lastPrice: number,
+    volumen: number,
+    requestDate?: Date | null,
+  ) {
+    const marketStatus = new MarketStatus();
+    marketStatus.tradingPair = `${buyer}${seller}`;
+    marketStatus.requestDate = requestDate ?? new Date();
+    marketStatus.lastPrice = lastPrice;
+    marketStatus.volumen = volumen;
+
+    return await this.repository.save(marketStatus);
+  }
 }
