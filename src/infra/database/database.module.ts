@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreModule } from 'src/core/core.module';
-const entities = [];
+import entities from './database.entities';
 
 @Module({
   imports: [

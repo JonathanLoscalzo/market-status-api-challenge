@@ -22,7 +22,13 @@
     "prepare": "husky install",
     "husky": "husky",
     "commitlint:lastcommit": "npx commitlint --from HEAD~1 --to HEAD --verbose",
-    "release": "standard-version"
+    "release": "standard-version",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:d": "npm run typeorm -- -d ./src/infra/database/migrations.config.ts",
+    "typeorm:run-migrations": "npm run typeorm:d migration:run",
+    "typeorm:generate-migration": "npm run typeorm:d -- migration:generate ./src/infra/database/migrations/$npm_config_name",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/infra/database/migrations/$npm_config_name",
+    "typeorm:revert-migration": "npm run typeorm:d -- migration:revert"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",
