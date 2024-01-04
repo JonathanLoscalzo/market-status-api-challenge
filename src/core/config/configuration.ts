@@ -10,5 +10,16 @@ export default () => ({
     synchronize: process.env.DATABASE_SYNC == 'true', // remover cuando haya migraciones
     logging: process.env.DATABASE_LOG == 'true',
     autoLoadEntities: false,
+    options: { encrypt: false },
+    ssl:
+      process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : false,
+    extra: {
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : false,
+    },
   },
 });
