@@ -49,9 +49,6 @@ export AWS_INSTANCE_DNS=$(terraform output -raw aws_instance_dns)
 # Create a .env.production.local file with the DATABASE_HOST value from Terraform output
 echo "DATABASE_HOST=$(terraform output -raw market-status-db-endpoint | cut -d ':'  -f 1 )" > ../environments/.env.production.local
 
-# Print a message with the URL to navigate to after the script finishes
-echo "After finish, navigate to http://$AWS_INSTANCE_DNS:8080/docs"
-
 # Change permissions for the private key file
 sudo chmod 400 private_key.pem
 
@@ -72,3 +69,6 @@ scp -i ./iac/private_key.pem -pr backend.zip ubuntu@$AWS_INSTANCE_DNS:/home/ubun
 
 # SSH into the AWS instance, install unzip, extract the archive, and execute the startup script
 ssh -i ./iac/private_key.pem ubuntu@$AWS_INSTANCE_DNS 'sudo apt-get install unzip -y; rm -f backend; unzip backend.zip -d backend; bash /home/ubuntu/backend/startup.sh'
+
+# Print a message with the URL to navigate to after the script finishes
+echo "After finish, navigate to http://$AWS_INSTANCE_DNS:8080/docs"
